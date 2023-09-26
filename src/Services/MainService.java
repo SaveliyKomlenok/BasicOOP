@@ -1,22 +1,16 @@
-package Services;
+package services;
 
-import models.Necklace;
-
-import java.util.Scanner;
+import classes.Necklace;
+import util.ExceptionHandler;
 
 public class MainService {
     static Necklace necklace = new Necklace();
-    static Scanner sin = new Scanner(System.in);
+    static ExceptionHandler exceptionHandler = new ExceptionHandler();
 
     public static void generateNecklace(){
-        System.out.print("\nВведите количество камней для ожерелья(от 5 до 100): ");
-        int numberOfStones = sin.nextInt();
-        if(numberOfStones >= 5 && numberOfStones <=100){
-            necklace.createNecklace(necklace, numberOfStones);
-            System.out.println(necklace);
-        }else{
-            System.out.println("\nНеверный ввод");
-        }
+        int numberOfStones = exceptionHandler.checkInteger("\nВведите количество камней для ожерелья: ", 5,100);
+        necklace.createNecklace(necklace, numberOfStones);
+        System.out.println(necklace);
     }
 
     public static void showNecklace(){
@@ -39,23 +33,15 @@ public class MainService {
     }
 
     public static void showFoundStone(){
-        System.out.print("\nВведите диапазон прозрачности(0 - 100) \nОт: ");
-        int leftRangeOfTransparency = sin.nextInt();
-        System.out.print( "До: " );
-        int rightRangeOfTransparency = sin.nextInt();
+        System.out.print("\nВведите диапазон прозрачности");
+        int left = exceptionHandler.checkInteger("\nОт: ", 0,100);
+        int right = exceptionHandler.checkInteger("До: ", left,100);
 
-        if(leftRangeOfTransparency >= 0 && rightRangeOfTransparency >= 0 &&
-                rightRangeOfTransparency <= 100 && leftRangeOfTransparency <= rightRangeOfTransparency){
-            if(NecklaceService.findStonesByTransparencyRange(necklace.getStoneList(), leftRangeOfTransparency, rightRangeOfTransparency).isEmpty()){
-                System.out.println("\nКамни с заданным диапазоном прозрачности отсутствуют");
-            }
-            else {
-                System.out.println(NecklaceService.findStonesByTransparencyRange
-                        (necklace.getStoneList(), leftRangeOfTransparency, rightRangeOfTransparency));
-            }
+        if(NecklaceService.findStonesByTransparencyRange(necklace.getStoneList(), left, right).isEmpty()){
+            System.out.println("\nКамни с заданным диапазоном прозрачности отсутствуют");
         }
-        else{
-            System.out.println("\nНеверный ввод");
+        else {
+            System.out.println(NecklaceService.findStonesByTransparencyRange(necklace.getStoneList(), left, right));
         }
     }
 }
